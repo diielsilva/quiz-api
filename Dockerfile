@@ -1,9 +1,9 @@
 # Build Stage
 FROM maven:3.9.9-amazoncorretto-21 AS build
 WORKDIR /build
-COPY guess-the-number/pom.xml .
+COPY ./pom.xml .
 RUN mvn dependency:go-offline
-COPY guess-the-number/src ./src
+COPY ./src ./src
 RUN mvn clean package -DskipTests
 
 # Runtime Stage
