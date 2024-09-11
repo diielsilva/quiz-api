@@ -6,8 +6,8 @@ on:
       - master
 
     paths:
-      - *
-      - .github/workflows/pipeline.yml
+      - '*'
+      - '.github/workflows/pipeline.yml'
 
 jobs:
   compile:
