@@ -1,12 +1,13 @@
 name: Quiz API 1.0
 
 on:
+
   push:
     branches:
       - master
 
     paths:
-      - '*'
+      - 'quiz/**'
       - '.github/workflows/pipeline.yml'
 
 jobs:
