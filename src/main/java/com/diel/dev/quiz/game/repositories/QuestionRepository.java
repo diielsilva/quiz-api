@@ -1,13 +1,13 @@
 package com.diel.dev.quiz.game.repositories;
 
 import com.diel.dev.quiz.game.entities.Question;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Repository;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,22 +25,24 @@ public class QuestionRepository {
 
     private void initialize() {
         try {
-            File file = new ClassPathResource("questions.csv").getFile();
-            FileReader reader = new FileReader(file);
-            BufferedReader buffer = new BufferedReader(reader);
-            String line;
+            InputStream stream = getClass().getResourceAsStream("/questions.csv");
 
-            while ((line = buffer.readLine()) != null) {
-                String[] question = line.split(",");
-                int index = database.size();
+            if (stream != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
+                String line;
 
-                Question mapped = map(index, question);
+                while ((line = reader.readLine()) != null) {
+                    String[] question = line.split(",");
+                    int index = database.size();
 
-                database.add(mapped);
+                    Question mapped = map(index, question);
+
+                    database.add(mapped);
+                }
+
+                stream.close();
+                reader.close();
             }
-
-            reader.close();
-            buffer.close();
 
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
