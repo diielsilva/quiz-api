@@ -1,6 +1,8 @@
 package com.diel.dev.quiz.game.repositories;
 
 import com.diel.dev.quiz.game.entities.Question;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Repository;
 
 import java.io.BufferedReader;
@@ -25,24 +27,23 @@ public class QuestionRepository {
 
     private void initialize() {
         try {
-            InputStream stream = getClass().getResourceAsStream("/questions.csv");
+            Resource resource = new ClassPathResource("questions.csv");
+            InputStream stream = resource.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
+            String line;
 
-            if (stream != null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-                String line;
+            while ((line = reader.readLine()) != null) {
+                String[] question = line.split(",");
+                int index = database.size();
 
-                while ((line = reader.readLine()) != null) {
-                    String[] question = line.split(",");
-                    int index = database.size();
+                Question mapped = map(index, question);
 
-                    Question mapped = map(index, question);
-
-                    database.add(mapped);
-                }
-
-                stream.close();
-                reader.close();
+                database.add(mapped);
             }
+
+            stream.close();
+            reader.close();
+
 
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
